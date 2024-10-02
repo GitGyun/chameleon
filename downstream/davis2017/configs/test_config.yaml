@@ -1,0 +1,37 @@
+# environment settings
+seed: 0
+precision: bf16
+strategy: ddp
+num_nodes: 1
+
+# data arguments
+dataset: davis2017
+task: vos
+class_wise: True
+class_name: none
+shot: 1
+img_size: 384
+base_size: 448
+vis_size: 448
+support_idx: 0
+coord_path: none
+autocrop: False
+autocrop_minoverlap: 0.5
+randomscale: False
+
+# dataloader arguments
+num_workers: 1
+eval_shot: 1
+eval_batch_size: 8
+eval_size: -1
+support_idx: 0
+chunk_size: -1
+channel_chunk_size: -1
+
+# logging arguments
+log_dir: TEST_DAVIS2017
+save_dir: FINETUNE_DAVIS2017
+load_dir: TRAIN
+load_step: 400000
+load_path: none
+result_dir: results_davis2017

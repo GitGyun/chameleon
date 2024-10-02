@@ -1,0 +1,72 @@
+# environment settings
+seed: 0
+precision: bf16
+strategy: ddp
+num_nodes: 1
+
+# data arguments
+dataset: isic2018
+task: segment_medical
+class_wise: False
+class_name: none
+shot: 20
+img_size: 384
+base_size: 448
+vis_size: 448
+support_idx: 0
+randomflip: False
+randomjitter: True
+randomrotate: True
+randomblur: True
+coord_path: none
+autocrop: False
+autocrop_minoverlap: 0.5
+
+# dataloader arguments
+num_workers: 1
+global_batch_size: 5
+eval_shot: 50
+eval_batch_size: 10
+eval_size: 100
+chunk_size: -1
+channel_chunk_size: -1
+channel_sampling: -1
+
+# model arguments
+attn_dropout: 0.5
+n_input_images: 1
+separate_alpha: False
+
+# training arguments
+n_steps: 10000
+n_schedule_steps: -1
+optimizer: adam
+loss_type: bce
+mask_value: -1.
+early_stopping_patience: 5
+monitor: F1_inverted
+
+# learning rate arguments
+lr: 0.001
+lr_pretrained: 0.0002
+lr_schedule: constant 
+lr_warmup: 0
+lr_warmup_scale: 0.
+schedule_from: 0
+weight_decay: 0.
+lr_decay_degree: 0.9
+
+# parameter arguments
+from_scratch: False
+head_tuning: False
+label_decoder_tuning: False
+input_embed_tuning: False
+output_embed_tuning: False
+relpos_tuning: False
+
+# logging arguments
+log_dir: FINETUNE_ISIC2018
+save_dir: FINETUNE_ISIC2018
+load_dir: TRAIN
+val_iter: 100
+load_step: 400000

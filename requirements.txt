@@ -1,0 +1,16 @@
+torch==2.2.0
+pytorch_lightning==2.4.0
+lightning_habana==1.6.0
+timm==0.6.12
+numpy
+scikit-image
+tensorboard
+tqdm
+einops
+pycocotools
+xtcocotools
+fastremap
+numba
+opencv-python
+flow_vis
+plyfile

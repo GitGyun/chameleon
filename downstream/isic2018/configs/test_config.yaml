@@ -1,0 +1,36 @@
+# environment settings
+seed: 0
+precision: bf16
+strategy: ddp
+num_nodes: 1
+
+# data arguments
+dataset: isic2018
+task: segment_medical
+class_wise: False
+class_name: none
+shot: 20
+img_size: 384
+base_size: 448
+vis_size: 448
+support_idx: 0
+coord_path: none
+autocrop: False
+autocrop_minoverlap: 0.5
+
+# dataloader arguments
+num_workers: 1
+eval_shot: 50
+eval_batch_size: 8
+eval_size: -1
+support_idx: 0
+chunk_size: -1
+channel_chunk_size: -1
+
+# logging arguments
+log_dir: TEST_ISIC2018
+save_dir: FINETUNE_ISIC2018
+load_dir: TRAIN
+load_step: 400000
+load_path: none
+result_dir: none

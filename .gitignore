@@ -1,0 +1,12 @@
+*.ipynb_checkpoints*
+*__pycache__*
+*.ipynb
+*.code-workspace
+experiments*
+support_data*.pth
+.idea*
+.vscode*
+data_paths.yaml
+notebooks*
+lightning_logs*
+results*
