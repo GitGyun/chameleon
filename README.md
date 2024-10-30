@@ -1,4 +1,4 @@
-# Few-shot Generalist for Non-Linguistic Data
+# Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild
 This repository is designed for implementing training, finetuning, and testing pipeline of ['Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild'](https://arxiv.org/pdf/2404.18459) using Gaudi-v2.
 
 ## Dependencies
@@ -23,7 +23,7 @@ $ python get_beitv2.py
 {datasetN}: {pathN}
 ```
 
-- We provide a meta-trained checkpoint of Chameleon in [this link](https://www.dropbox.com/scl/fi/2ta5kez62nw4lgb8bhvf0/step-400000.pth?rlkey=xilbtrawhua95bb5abywthrrz&st=a6m13x94&dl=0). Please locate it in 'experiments/TRAIN/VTMv2/checkpoints/'. 
+- Meta-trained checkpoint of Chameleon will be released soon. 
 
 ## How to Run 
 - Meta-Training
