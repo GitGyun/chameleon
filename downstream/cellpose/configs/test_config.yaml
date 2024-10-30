@@ -1,0 +1,37 @@
+# environment settings
+seed: 0
+precision: bf16
+strategy: ddp
+num_nodes: 1
+
+# data arguments
+dataset: cellpose
+task: cellpose
+class_wise: False
+class_name: none
+shot: 50
+img_size: 224
+base_size: 256
+vis_size: 256
+support_idx: 0
+coord_path: none
+autocrop: True 
+autocrop_minoverlap: 0.5
+autocrop_rescale: 1
+
+# dataloader arguments
+num_workers: 1
+eval_shot: 50
+eval_batch_size: 1
+eval_size: -1
+support_idx: 0
+chunk_size: 1
+channel_chunk_size: 1
+
+# logging arguments
+log_dir: TEST_CELLPOSE
+save_dir: FINETUNE_CELLPOSE
+load_dir: TRAIN
+load_step: 400000
+load_path: none
+result_dir: none

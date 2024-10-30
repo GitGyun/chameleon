@@ -1,0 +1,14 @@
+pretrained_ckpt/beitv2_large_patch16_224_pt1k_ft21kto1k.pth filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_FSC147/VTMv2/task:object_counting_shot:50_is:512_lr:0.001_sid:0/logs/events.out.tfevents.1727036292.pggaudi-s014-nicl.1673714.0 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_FSC147/VTMv2/task:object_counting_shot:50_is:512_lr:0.001_sid:0/logs/events.out.tfevents.1727036958.pggaudi-s014-nicl.1673714.1 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_FSC147_debugging/VTMv2/task:object_counting_shot:50_is:512_lr:0.001_sid:0/logs/events.out.tfevents.1727033340.pggaudi-s014-nicl.1387159.0 filter=lfs diff=lfs merge=lfs -text
+experiments/TRAIN/VTMv2_test/logs/events.out.tfevents.1727036096.pggaudi-s014-nicl.1612654.0 filter=lfs diff=lfs merge=lfs -text
+experiments/TRAIN_debugging/VTMv2/logs/events.out.tfevents.1727001207.pggaudi-s014-nicl.566072.0 filter=lfs diff=lfs merge=lfs -text
+experiments/**/events.out* filter=lfs diff=lfs merge=lfs -text
+experiments/*/*/*/logs/events.out* filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_CELLPOSE/VTMv2/task:cellpose_shot:50_is:224_lr:0.003_sid:0/logs/events.out.tfevents.1727090964.pggaudi-s014-nicl.1946495.0 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_CELLPOSE/VTMv2/task:cellpose_shot:50_is:224_lr:0.003_sid:0/logs/events.out.tfevents.1727097628.pggaudi-s014-nicl.1946495.1 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_FSC147/VTMv2/task:object_counting_shot:50_is:512_lr:0.001_sid:0/logs/events.out.tfevents.1727078368.pggaudi-s014-nicl.823772.0 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_FSC147/VTMv2/task:object_counting_shot:50_is:512_lr:0.001_sid:0/logs/events.out.tfevents.1727079618.pggaudi-s014-nicl.823772.1 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_ISIC2018/VTMv2/task:segment_medical_shot:20_is:384_lr:0.001_sid:0/logs/events.out.tfevents.1727090907.pggaudi-s014-nicl.1943919.0 filter=lfs diff=lfs merge=lfs -text
+experiments/FINETUNE_ISIC2018/VTMv2/task:segment_medical_shot:20_is:384_lr:0.001_sid:0/logs/events.out.tfevents.1727090972.pggaudi-s014-nicl.1943919.1 filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,36 @@
+# environment settings
+seed: 0
+precision: bf16
+strategy: ddp
+num_nodes: 1
+
+# data arguments
+dataset: ap10k
+task: animalkp
+class_wise: True
+class_name: none
+shot: 20
+img_size: 224
+base_size: 256
+vis_size: 256
+support_idx: 0
+coord_path: none
+autocrop: False
+autocrop_minoverlap: 0.5
+
+# dataloader arguments
+num_workers: 1
+eval_shot: 20
+eval_batch_size: 8
+eval_size: -1
+support_idx: 0
+chunk_size: 1
+channel_chunk_size: 1
+
+# logging arguments
+log_dir: TEST_AP10K
+save_dir: FINETUNE_AP10K
+load_dir: TRAIN
+load_step: 400000
+load_path: none
+result_dir: none
