@@ -4,6 +4,8 @@ This repository contains official code for [Chameleon: A Data-Efficient Generali
 
 The documentation for downloading and preprocessing datasets will be uploaded soon.
 
+Please checkout gaudi-v2 branch for gaudi-v2 implementation of Chameleon.
+
 ![image-Chameleon](https://github.com/GitGyun/chameleon/blob/main/main_figure.png)
 
 ## Citation
