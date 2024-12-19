@@ -392,38 +392,21 @@ def load_trained_ckpt(ckpt_path):
         ckpt = torch.load(ckpt_path)
         state_dict = ckpt['state_dict']
         config = ckpt['config']
-        
-    for key in list(state_dict.keys()):
-        if 'teacher' in key:
-            del state_dict[key]
 
     return state_dict, config
 
 
-def load_adapted_ckpt(ckpt_path):
+def load_finetuned_ckpt(ckpt_path):
     ckpt = torch.load(ckpt_path)
     state_dict = ckpt['state_dict']
+    config = ckpt['hyper_parameters']['config']
 
-    return state_dict
-
-
-def load_finetuned_ckpts(ckpt_paths):
-    state_dicts = []
-    configs = []
-    if isinstance(ckpt_paths, str):
-        ckpt_paths = [ckpt_paths]
-    for ckpt_path in ckpt_paths:
-        ckpt = torch.load(ckpt_path)
-        state_dicts.append(ckpt['state_dict'])
-        configs.append(ckpt['hyper_parameters']['config'])
-
-    return state_dicts, configs
+    return state_dict, config
 
 
 def resized_load_state_dict(model, state_dict, config, verbose=True, mt_config=None):
-    if mt_config is None or mt_config.n_input_images == 1:
-        depth_src = 1
-        depth_tar = config.n_input_images if not config.expand_input_embed else 1
+    if mt_config is None:
+        depth_src = depth_tar = 1
     else:
         depth_src = depth_tar = mt_config.n_input_images
 
@@ -469,7 +452,8 @@ def remove_task_specific_parameters(config, model, state_dict):
             state_dict[key] = state_dict[key].mean(0)
 
     # remove mask token
-    if 'model.image_encoder.backbone.mask_token' in state_dict and config.drop_patch_rate == 0:
+    if 'model.image_encoder.backbone.mask_token' in state_dict:
+        print('remove mask token')
         del state_dict['model.image_encoder.backbone.mask_token']
 
 
@@ -504,7 +488,7 @@ def handle_unsaved_parameters(config, model, state_dict):
             
 
 def load_model(config, verbose=True, reduced=False, load_explicitly=False):
-    load_path = None
+    ckpt_path = None
     ft_config = None
     ts_config = None
 
@@ -513,10 +497,10 @@ def load_model(config, verbose=True, reduced=False, load_explicitly=False):
         if not (config.continue_mode and load_explicitly):
             model = LightningTrainWrapper(config, verbose=verbose)
         if config.continue_mode:
-            load_path = get_ckpt_path(config.load_dir, config.exp_name, config.load_step,
+            ckpt_path = get_ckpt_path(config.load_dir, config.exp_name, config.load_step,
                                       save_postfix=config.save_postfix, reduced=reduced)
             if load_explicitly:
-                state_dict, mt_config = load_trained_ckpt(load_path)
+                state_dict, mt_config = load_trained_ckpt(ckpt_path)
                 if config.no_train:
                     mt_config.no_train = True
                 if config.no_eval:
@@ -535,21 +519,23 @@ def load_model(config, verbose=True, reduced=False, load_explicitly=False):
         else:
             config_new = ts_config = copy.deepcopy(config)
 
-        ckpt_path = get_ckpt_path(config.load_dir, config.exp_name, config.load_step, reduced=reduced)
-        state_dict, config = load_trained_ckpt(ckpt_path)
+        mt_ckpt_path = config.load_mt_path
+        if not os.path.exists(mt_ckpt_path):
+            raise FileNotFoundError(f"meta-trained checkpoint ({mt_ckpt_path}) does not exist!")
+        state_dict, config = load_trained_ckpt(mt_ckpt_path)
         if verbose:
-            print(f'meta-trained checkpoint loaded from {ckpt_path}')
+            print(f'meta-trained checkpoint loaded from {mt_ckpt_path}')
         mt_config = copy.deepcopy(config)
 
         mt_t_idxs, mt_g_idxs = extract_valid_task_idxs(mt_config)
 
         # load fine-tuned checkpoint
         if config_new.stage == 2:
-            ft_ckpt_paths = get_ckpt_path(config_new.save_dir, config_new.exp_name, 0,
-                                          config_new.exp_subname + config_new.subname_postfix, config_new.save_postfix,
-                                          load_path=config_new.load_path)
-            _, ft_configs = load_finetuned_ckpts(ft_ckpt_paths)
-            ft_config = copy.deepcopy(ft_configs[0])
+            ft_ckpt_path = config_new.load_ft_path
+            if not os.path.exists(ft_ckpt_path):
+                raise FileNotFoundError(f"fine-tuned checkpoint ({ft_ckpt_path}) does not exist!")
+            _, ft_config = load_finetuned_ckpt(ft_ckpt_path)
+            ft_config = copy.deepcopy(ft_config)
 
             # merge config
             copy_values(ft_config, config)
@@ -583,24 +569,17 @@ def load_model(config, verbose=True, reduced=False, load_explicitly=False):
 
         # load fine-tuned checkpoint
         elif config_new.stage == 2:
-            ft_ckpt_paths = get_ckpt_path(config.save_dir, config.exp_name, 0,
-                                          config.exp_subname + config.subname_postfix, config.save_postfix,
-                                          load_path=config.load_path)
-            ft_state_dicts, _ = load_finetuned_ckpts(ft_ckpt_paths)
+            ft_ckpt_path = config.load_ft_path
+            ft_state_dict, _ = load_finetuned_ckpt(ft_ckpt_path)
             if verbose:
-                print('fine-tuned checkpoint loaded from')
-                if isinstance(ft_ckpt_paths, str):
-                    print(ft_ckpt_paths)
-                else:
-                    for path in ft_ckpt_paths:
-                        print(path)
+                print(f'fine-tuned checkpoint loaded from {ft_ckpt_path}')
 
-            for key in ft_state_dicts[0]:
-                state_dict[key] = torch.cat([ft_state_dict[key] for ft_state_dict in ft_state_dicts], dim=0)
+            for key in ft_state_dict:
+                state_dict[key] = ft_state_dict[key]
 
         resized_load_state_dict(model, state_dict, config, verbose=verbose, mt_config=mt_config)
 
-    return model, config, load_path, mt_config, ft_config, ts_config
+    return model, config, ckpt_path, mt_config, ft_config, ts_config
 
         
 class CustomProgressBar(TQDMProgressBar):

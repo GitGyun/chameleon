@@ -1,9 +1,11 @@
-torch==2.2.0
+torch==2.3.1
 pytorch_lightning==2.4.0
 lightning_habana==1.6.0
+deepspeed==0.15.4
 timm==0.6.12
 numpy
 scikit-image
+easydict
 tensorboard
 tqdm
 einops

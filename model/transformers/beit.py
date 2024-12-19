@@ -336,7 +336,7 @@ class Beit(nn.Module):
 
         # determine window size for relative position bias
         self.n_input_images = n_input_images
-        if self.n_input_images > 1 and not config.expand_input_embed:
+        if self.n_input_images > 1:
             window_size = (self.n_input_images, *self.patch_embed.grid_size)
         else:
             window_size = self.patch_embed.grid_size

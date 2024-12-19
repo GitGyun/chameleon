@@ -42,16 +42,6 @@ def parse_args(shell_script=None):
     parser.add_argument('--check_mode', '-check', default=False, action='store_true')
     parser.add_argument('--use_hpu', '-hpu', default=False, action='store_true')
 
-    parser.add_argument('--large_mode', '-large', default=False, action='store_true')
-    parser.add_argument('--dinov2_large_mode', '-dlarge', default=False, action='store_true')
-    parser.add_argument('--dinov2_giant_mode', '-dgiant', default=False, action='store_true')
-    parser.add_argument('--vit_large_mode', '-vlarge', default=False, action='store_true')
-    parser.add_argument('--clip_large_mode', '-clarge', default=False, action='store_true')
-    parser.add_argument('--mae_large_mode', '-mlarge', default=False, action='store_true')
-    parser.add_argument('--beit_large_mode', '-blarge', default=False, action='store_true')
-    parser.add_argument('--mae_huge_mode', '-mhuge', default=False, action='store_true')
-    parser.add_argument('--reg4_dinov2_large_mode', '-rlarge', default=False, action='store_true')
-
     parser.add_argument('--temporary_checkpointing', '-tc', default=False, action='store_true')
     parser.add_argument('--development_mode', '-dev', default=False, action='store_true')
     parser.add_argument('--benchmark_mode', '-bm', default=False, action='store_true')
@@ -145,6 +135,8 @@ def parse_args(shell_script=None):
     parser.add_argument('--save_iter', '-siter', type=int, default=None)
     parser.add_argument('--load_step', '-ls', type=int, default=None)
     parser.add_argument('--load_path', '-lpath', type=str, default=None)
+    parser.add_argument('--load_mt_path', '-mtpath', type=str, default=None)
+    parser.add_argument('--load_ft_path', '-ftpath', type=str, default=None)
     parser.add_argument('--coord_path', '-cpath', type=str, default=None)
     parser.add_argument('--monitor', '-mt', type=str, default=None)
 
@@ -179,14 +171,6 @@ def parse_args(shell_script=None):
     with open('data_paths.yaml', 'r') as f:
         path_dict = yaml.safe_load(f)
         config.path_dict = path_dict
-
-    ### large mode
-    if args.large_mode:
-        config.image_encoder = 'beitv2_large_patch16_224'
-        config.label_encoder = 'vit_large_patch16_224'
-        config.name_postfix = f'_LARGE{config.name_postfix}'
-        config.n_attn_heads = 16
-        config.decoder_features = 256
 
     # image size
     if isinstance(config.img_size, int):

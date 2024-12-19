@@ -2,17 +2,15 @@ import os
 import random
 import numpy as np
 from PIL import Image
-import scipy.ndimage
 from einops import repeat, rearrange
 
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor
-from torchvision.utils import draw_keypoints 
 
 from dataset.augmentation import get_filtering_augmentation
-from dataset.utils import crop_arrays
+from dataset.utils import crop_arrays, draw_keypoints
 from dataset.coco_api_wrapper import SingletonCOCOFactory
 
 
@@ -217,7 +215,7 @@ class COCOStereo(Dataset):
     def _single_image_prompts(self, image, points, radius, color="white", alpha=0):
         """
         image: (3, H, W) image tensor
-        points: normalized point tensor [0,1] with shape of (N, 2)
+        points: normalized point tensor [0, 1] with shape of (N, 2)
         
         return (3, H, W) tensor 
         """

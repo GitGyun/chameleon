@@ -23,7 +23,7 @@ cont_task: True
 cat_task: True
 task_group: None
 coco_cropped: True
-use_stereo_datasets: False
+use_stereo_datasets: True
 no_coco_kp: False
 
 num_workers: 8

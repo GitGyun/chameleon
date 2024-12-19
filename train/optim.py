@@ -28,8 +28,6 @@ def get_optimizer(config, model):
             learnable_params.append({'params': model.bias_parameters(), 'lr': config.lr})
             learnable_params.append({'params': model.matching_module.alpha.parameters(), 'lr': config.lr})
             learnable_params.append({'params': model.matching_module.layernorm.parameters(), 'lr': config.lr})
-            if config.drop_patch_rate > 0:
-                learnable_params.append({'params': model.image_encoder.backbone.mask_token, 'lr': config.lr_pretrained})
             if config.head_tuning:
                 learnable_params.append({'params': model.label_decoder.head.parameters(), 'lr': config.lr_pretrained})
             if config.label_decoder_tuning:

@@ -320,7 +320,7 @@ class UnifiedTrainDataset(Unified):
                 p_datasets = p_datasets / p_datasets.sum()
                 setattr(self, f'{task_type}_dataset_sampler', torch.distributions.Categorical(p_datasets))
 
-    def _register_stereo_samplers(self, ask_sampling_weight=None):
+    def _register_stereo_samplers(self, task_sampling_weight=None):
         task_types = ['base', 'continuous', 'categorical']
         
         if task_sampling_weight is None:
