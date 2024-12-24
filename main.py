@@ -1,17 +1,14 @@
 import os
-# eager mode
+# set eager mode
 os.environ['PT_HPU_LAZY_MODE'] = '0'
 os.environ['PT_HPU_MAX_COMPOUND_OP_SIZE'] = '1'
-
-# lazy mode
-# os.environ['PT_HPU_LAZY_MODE'] = '1'
-# os.environ['PT_HPU_LAZY_ACC_PAR_MODE'] = '1'
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import lightning_habana
 import lightning.pytorch as pl
 import torch
 import warnings
 import habana_frameworks.torch.gpu_migration
+import habana_frameworks.torch.core as htcore
 
 from args import parse_args
 from train.train_utils import configure_experiment, load_model, print_configs
@@ -50,7 +47,7 @@ if __name__ == "__main__":
             max_epochs = config.n_steps // config.val_iter
         else:
             max_epochs = 1
-
+        
         # create pytorch lightning trainer.
         trainer = pl.Trainer(
             logger=logger,
@@ -69,7 +66,7 @@ if __name__ == "__main__":
             gradient_clip_val=config.gradient_clip_val,
             num_nodes=config.num_nodes,
         )
-
+        
         # validation at start
         if config.stage == 1 or (config.stage == 0 and config.no_train):
             trainer.validate(model, verbose=False)

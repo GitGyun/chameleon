@@ -82,9 +82,6 @@ class CrossAttention(nn.Module):
         
 
 class MatchingModule(nn.Module):
-    '''
-    Matching Module of VTMv2
-    '''
     def __init__(self, dim_w, dim_z, n_heads=16, alpha_init=0, alpha_temp=0.05, n_alphas=1):
         super().__init__()
         self.matching = nn.ModuleList([CrossAttention(dim_w, dim_z, dim_z, num_heads=n_heads)

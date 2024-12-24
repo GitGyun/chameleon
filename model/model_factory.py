@@ -1,4 +1,4 @@
-from .vtm import VTM
+from .chameleon import Chameleon
 from meta_train.unified import Unified
 from downstream.davis2017.dataset import DAVIS2017
 
@@ -26,7 +26,7 @@ def get_model(config, verbose=False):
             n_tasks = 1
         n_task_groups = 1
 
-    model = VTM(config, n_tasks, n_task_groups)
+    model = Chameleon(config, n_tasks, n_task_groups)
 
     if verbose:
         print(f'Registered VTM with {n_tasks} task-specific and {n_task_groups} group-specific parameters.')

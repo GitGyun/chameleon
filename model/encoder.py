@@ -7,7 +7,7 @@ from .transformers.custom_layers import Identity
         
 class ViTEncoder(nn.Module):
     '''
-    Vision Transformer encoder wrapper for VTM
+    Vision Transformer encoder wrapper
     '''
     def __init__(self, config, backbone, pretrained, in_chans, **kwargs):
         super().__init__()

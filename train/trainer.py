@@ -119,7 +119,9 @@ class LightningTrainWrapper(pl.LightningModule):
             # self.validation_step_outputs = [[ ]] * len(all_val_loaders)
             self.validation_step_outputs = [[ ] for _ in range(len(all_val_loaders))]
             return all_val_loaders
-    
+        
+        return []
+
     def test_dataloader(self):
         '''
         Prepare test loaders.

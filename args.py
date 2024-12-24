@@ -42,23 +42,13 @@ def parse_args(shell_script=None):
     parser.add_argument('--check_mode', '-check', default=False, action='store_true')
     parser.add_argument('--use_hpu', '-hpu', default=False, action='store_true')
 
-    parser.add_argument('--large_mode', '-large', default=False, action='store_true')
-    parser.add_argument('--dinov2_large_mode', '-dlarge', default=False, action='store_true')
-    parser.add_argument('--dinov2_giant_mode', '-dgiant', default=False, action='store_true')
-    parser.add_argument('--vit_large_mode', '-vlarge', default=False, action='store_true')
-    parser.add_argument('--clip_large_mode', '-clarge', default=False, action='store_true')
-    parser.add_argument('--mae_large_mode', '-mlarge', default=False, action='store_true')
-    parser.add_argument('--beit_large_mode', '-blarge', default=False, action='store_true')
-    parser.add_argument('--mae_huge_mode', '-mhuge', default=False, action='store_true')
-    parser.add_argument('--reg4_dinov2_large_mode', '-rlarge', default=False, action='store_true')
-
     parser.add_argument('--temporary_checkpointing', '-tc', default=False, action='store_true')
     parser.add_argument('--development_mode', '-dev', default=False, action='store_true')
     parser.add_argument('--benchmark_mode', '-bm', default=False, action='store_true')
     parser.add_argument('--single_gpu', '-sgpu', default=False, action='store_true')
     parser.add_argument('--slurm', default=False, action='store_true')
     parser.add_argument('--no_coco_kp', default=False, action='store_true')
-    
+
     parser.add_argument('--stage', type=int, default=0, choices=[0, 1, 2])
     parser.add_argument('--task', type=str, default=None, choices=DOWNSTREAM_TASKS)
     parser.add_argument('--exp_name', type=str, default='')
@@ -69,7 +59,6 @@ def parse_args(shell_script=None):
     parser.add_argument('--result_postfix', '-rptf', type=str, default='')
     parser.add_argument('--result_dir', '-rdir', type=str, default=None)
     parser.add_argument('--num_nodes', '-n', type=int, default=None)
-    parser.add_argument('--base_device_rank', '-bdr', type=int, default=0)
     parser.add_argument('--num_devices', '-nd', type=int, default=None)
 
     # optional arguments
@@ -147,6 +136,8 @@ def parse_args(shell_script=None):
     parser.add_argument('--save_iter', '-siter', type=int, default=None)
     parser.add_argument('--load_step', '-ls', type=int, default=None)
     parser.add_argument('--load_path', '-lpath', type=str, default=None)
+    parser.add_argument('--load_mt_path', '-mtpath', type=str, default=None)
+    parser.add_argument('--load_ft_path', '-ftpath', type=str, default=None)
     parser.add_argument('--coord_path', '-cpath', type=str, default=None)
     parser.add_argument('--monitor', '-mt', type=str, default=None)
 
@@ -174,21 +165,15 @@ def parse_args(shell_script=None):
 
     # copy parsed arguments
     for key in args.__dir__():
+        if getattr(config, key, '1234null') == '1234null':
+            setattr(config, key, getattr(args, key))
         if key[:2] != '__' and getattr(args, key) is not None:
             setattr(config, key, getattr(args, key))
-
+    
     # retrieve data root
     with open('data_paths.yaml', 'r') as f:
         path_dict = yaml.safe_load(f)
         config.path_dict = path_dict
-
-    ### large mode
-    if args.large_mode:
-        config.image_encoder = 'beitv2_large_patch16_224'
-        config.label_encoder = 'vit_large_patch16_224'
-        config.name_postfix = f'_LARGE{config.name_postfix}'
-        config.n_attn_heads = 16
-        config.decoder_features = 256
 
     # image size
     if isinstance(config.img_size, int):
@@ -256,7 +241,7 @@ def parse_args(shell_script=None):
         config.dataset = [config.dataset]
 
     if config.exp_name == '':
-        config.exp_name = f'VTMv2{config.name_postfix}'
+        config.exp_name = f'Chameleon{config.name_postfix}'
 
     # parse dataset name
     if len(config.dataset) == 1:
@@ -293,9 +278,9 @@ def parse_args(shell_script=None):
         else:
             config.monitor = f'mtest_valid/{config.dataset}_{config.task}_{config.monitor}'
 
-    elif config.stage == 2:
-        config.single_gpu = True
-    
+    # elif config.stage == 2:
+    #     config.single_gpu = True
+
     if config.num_devices is None:
         if config.single_gpu:
             config.num_devices = 1

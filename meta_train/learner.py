@@ -121,7 +121,7 @@ class MetaTrainLearner:
                 self.evaluator[key].reset()
 
     def get_train_loader(self):
-        batch_size = self.config.global_batch_size  // self.n_devices
+        batch_size = self.config.global_batch_size // self.n_devices
         train_loader = DataLoader(self.train_data, batch_size=batch_size,
                                   shuffle=(self.n_devices == 1), pin_memory=True, drop_last=True, num_workers=self.config.num_workers)
         

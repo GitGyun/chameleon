@@ -1,4 +1,4 @@
-# Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild
+# Few-shot Generalist for Non-Linguistic Data
 This repository is designed for implementing training, finetuning, and testing pipeline of ['Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild'](https://arxiv.org/pdf/2404.18459) using Gaudi-v2.
 
 ## Dependencies
@@ -8,7 +8,11 @@ $ pip install -r requirements.txt
 ```
 
 ## Setup
-- Download meta-training and downstream datasets (will be released soon)
+- Download meta-training and downstream datasets:
+```
+$ python get_datasets.py --root {ROOTDIR} --mode {DOWNLOAD_MODE}
+```
+DOWNLOAD_MODE is one of ['all', 'downstream', 'train', 'taskonomy', 'coco', 'midair', 'mpii', 'deepfashion', 'freihand', 'ap10k', 'davis2017', 'linemod', 'isic2018', 'fsc147', 'cellpose']. After downloading them, please unzip each dataset.
 
 - To download BEITv2-LARGE checkpoint used in meta-training, run the following command:
 ```
@@ -23,7 +27,7 @@ $ python get_beitv2.py
 {datasetN}: {pathN}
 ```
 
-- Meta-trained checkpoint of Chameleon will be released soon. 
+- We provide a meta-trained checkpoint of Chameleon in [this link](https://www.dropbox.com/scl/fi/2ta5kez62nw4lgb8bhvf0/step-400000.pth?rlkey=xilbtrawhua95bb5abywthrrz&st=a6m13x94&dl=0). Please locate it in 'experiments/TRAIN/VTMv2/checkpoints/'. 
 
 ## How to Run 
 - Meta-Training
@@ -55,8 +59,3 @@ $ bash scripts/ap10k/finetune.sh VTMv2 ${CLASSNAME} -nd 4
 $ bash scripts/linemod/finetune_segment.sh VTMv2 ${CLASSNAME} -nd 2 -salpha False
 $ bash scripts/linemod/finetune_pose.sh VTMv2 ${CLASSNAME} -nd 2 -salpha False
 ```
-
-## Current Issues (will be fixed)
-- Low HPU utilization in dynamic mode.
-- Lazy mode is not working.
-- The 'separate_alpha' option is not working in dynamic-mode. This may affect the performance of pose estimation in linemod dataset.

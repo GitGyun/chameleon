@@ -297,7 +297,7 @@ class FeatureFusionBlock(nn.Module):
 
 class DPTDecoder(nn.Module):
     '''
-    DPT Convolutional Decoder for VTM
+    DPT Convolutional Decoder 
     '''
     def __init__(self,
             grid_size,

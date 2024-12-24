@@ -22,7 +22,7 @@ class ISIC2018Learner(BaseLearner):
 
         self.evaluator = {key: None for key in keys}
         for key in keys:
-            self.evaluator[key] = AverageMeter(class_ids_interest=[0], semseg_classes=[0], device=torch.device(f'cuda:{self.local_rank}'))
+            self.evaluator[key] = AverageMeter(class_ids_interest=[0], semseg_classes=[0], device=torch.device(f'hpu:{self.local_rank}'))
         self.result_path = self.result_path.replace('.pth', f'_sid:{self.config.support_idx}.pth')
 
     def reset_evaluator(self):

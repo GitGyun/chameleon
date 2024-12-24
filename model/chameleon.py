@@ -6,16 +6,13 @@ from .decoder import DPTDecoder
 from .matching import MatchingModule
 
 
-class VTM(nn.Module):
-    '''
-    Visual Token Matching
-    '''
+class Chameleon(nn.Module):
     def __init__(self, config, n_tasks, n_task_groups):
         super().__init__()
         self.n_tasks = n_tasks
         self.n_task_groups = n_task_groups
         self.separate_alpha = getattr(config, 'separate_alpha', False)
-
+        
         self.image_encoder = ViTEncoder(config, config.image_encoder, pretrained=(config.stage == 0 and not config.continue_mode),
                                         in_chans=3, drop_path_rate=config.image_encoder_drop_path_rate,
                                         n_bias_sets=self.n_tasks, n_input_images=config.n_input_images,)
@@ -55,11 +52,14 @@ class VTM(nn.Module):
         for module in modules:
             for p in module.parameters():
                 yield p
-
+    
     def forward(self, X_S, Y_S, X_Q, t_idx=None, g_idx=None):
         # encode query input, support input and output
-        W_Qs = self.image_encoder(X_Q, t_idx=t_idx)
-        W_Ss = self.image_encoder(X_S, t_idx=t_idx)
+        l_q = X_Q.size(2)
+        X = torch.cat((X_Q, X_S), dim=2)
+        W_s = self.image_encoder(X, t_idx=t_idx)
+        W_Qs = [ w_s[:, :, :l_q] for w_s in W_s]
+        W_Ss = [ w_s[:, :, l_q:] for w_s in W_s]
         Z_Ss = self.label_encoder(Y_S)
 
         # mix support output by matching
@@ -70,7 +70,7 @@ class VTM(nn.Module):
         Y_Q_pred = self.label_decoder(Z_Q_preds)
         
         return Y_Q_pred
-    
+
     @torch.no_grad()
     def encode_support(self, X_S, Y_S, t_idx=None, g_idx=None):
         self.t_idx = t_idx

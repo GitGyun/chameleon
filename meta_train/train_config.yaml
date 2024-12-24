@@ -23,7 +23,7 @@ cont_task: True
 cat_task: True
 task_group: None
 coco_cropped: True
-use_stereo_datasets: False
+use_stereo_datasets: True
 no_coco_kp: False
 
 num_workers: 8
@@ -85,4 +85,3 @@ load_dir: TRAIN
 val_iter: 10000
 monitor: summary/mtrain_valid_pred
 load_step: -1
-num_devices: null

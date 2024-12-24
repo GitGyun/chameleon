@@ -97,7 +97,7 @@ class LINEMODMaskLearner(BaseLearner):
             keys = ['mtest_train', 'mtest_valid']
             self.evaluator = {key: None for key in keys}
             for key in keys:
-                self.evaluator[key] = AverageMeter(class_ids_interest=[0], semseg_classes=[0], device=torch.device(f'cuda:{self.local_rank}'))
+                self.evaluator[key] = AverageMeter(class_ids_interest=[0], semseg_classes=[0], device=torch.device(f'hpu:{self.local_rank}'))
         else:
             self.evaluator = {'mtest_test': []}
             self.result_path = os.path.join(self.config.result_dir, f'bbox_{self.config.class_name}.npy')
