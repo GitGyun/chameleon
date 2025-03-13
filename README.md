@@ -1,5 +1,7 @@
 # Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild
 
+(Update 03/13, 2025) We have uploaded pretrained checkpoints in [this link](https://drive.google.com/drive/folders/1m71RO6-8lN6q4yv8odCjG01loFUHq3-b?usp=drive_link).
+
 This repository contains official code for [Chameleon: A Data-Efficient Generalist for Dense Visual Prediction in the Wild](https://arxiv.org/abs/2404.18459) (ECCV 2024 oral).
 
 The documentation for downloading and preprocessing datasets will be uploaded soon.
